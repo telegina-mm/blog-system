@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Создать пост - Блог система{% endblock %}
+
+{% block content %}
+<h1>Создать новый пост</h1>
+<form method="post">
+    <div>
+        <label for="author_id">ID автора:</label>
+        <input type="number" id="author_id" name="author_id" required>
+    </div>
+    <div>
+        <label for="title">Заголовок:</label>
+        <input type="text" id="title" name="title" required maxlength="200">
+    </div>
+    <div>
+        <label for="content">Содержание:</label>
+        <textarea id="content" name="content" rows="10" required></textarea>
+    </div>
+    <button type="submit">Создать пост</button>
+</form>
+{% endblock %}

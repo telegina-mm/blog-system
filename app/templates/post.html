@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - Блог система{% endblock %}
+
+{% block content %}
+<article class="post-detail">
+    <header class="post-header">
+        <nav class="breadcrumb">
+            <a href="/">Главная</a> > <span>Пост</span>
+        </nav>
+        
+        <h1 class="post-title">{{ post.title }}</h1>
+        
+        <div class="post-meta">
+            <div class="meta-item">
+                <strong>Автор:</strong> {{ post.authorId }}
+            </div>
+            <div class="meta-item">
+                <strong>Создан:</strong> {{ post.createdAt.strftime('%d.%m.%Y в %H:%M') }}
+            </div>
+            {% if post.updatedAt != post.createdAt %}
+            <div class="meta-item">
+                <strong>Обновлен:</strong> {{ post.updatedAt.strftime('%d.%m.%Y в %H:%M') }}
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="post-content">
+        {{ post.content|replace('\n', '<br>')|safe }}
+    </div>
+
+    <footer class="post-actions">
+        <div class="action-buttons">
+            <a href="/" class="btn">← Назад к списку</a>
+            <a href="/posts/{{ post.id }}/edit" class="btn">✏️ Редактировать</a>
+        </div>
+    </footer>
+</article>
+
+<style>
+    .breadcrumb {
+        margin-bottom: 1rem;
+        color: #6c757d;
+    }
+
+    .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    .post-detail {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .post-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .post-title {
+        color: #495057;
+        font-size: 2.5rem;
+        margin: 1rem 0;
+        line-height: 1.2;
+    }
+
+    .post-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+    }
+
+    .meta-item {
+        color: #495057;
+    }
+
+    .post-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #495057;
+        margin-bottom: 2rem;
+    }
+
+    .post-content br {
+        margin-bottom: 1rem;
+    }
+
+    .post-actions {
+        padding-top: 1rem;
+        border-top: 2px solid #e9ecef;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+</style>
+
+<script>
+function deletePost(postId) {
+    if (confirm('Вы уверены, что хотите удалить этот пост?')) {
+        fetch(`/api/posts/${postId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/?message=Пост успешно удален';
+            } else {
+                alert('Ошибка при удалении поста');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ошибка при удалении поста');
+        });
+    }
+}
+</script>
+{% endblock %}
