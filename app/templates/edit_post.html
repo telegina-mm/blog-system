@@ -5,11 +5,11 @@
 {% block content %}
 <div class="form-container">
     <h1>Редактировать пост</h1>
-    
+
     <form method="post" class="post-form">
         <div class="form-group">
             <label for="title" class="form-label">Заголовок:</label>
-            <input type="text" id="title" name="title" class="form-input" required 
+            <input type="text" id="title" name="title" class="form-input" required
                    maxlength="200" value="{{ post.title }}">
         </div>
 

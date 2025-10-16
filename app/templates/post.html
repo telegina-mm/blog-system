@@ -6,21 +6,21 @@
 <article class="post-detail">
     <header class="post-header">
         <nav class="breadcrumb">
-            <a href="/">Главная</a> > <span>Пост</span>
+            <a href="/posts">Главная</a> > <span>Пост</span>
         </nav>
-        
+
         <h1 class="post-title">{{ post.title }}</h1>
-        
+
         <div class="post-meta">
             <div class="meta-item">
-                <strong>Автор:</strong> {{ post.authorId }}
+                <strong>Автор:</strong> {{ post.author }}
             </div>
             <div class="meta-item">
-                <strong>Создан:</strong> {{ post.createdAt.strftime('%d.%m.%Y в %H:%M') }}
+                <strong>Создан:</strong> {{ post.created_at }}
             </div>
-            {% if post.updatedAt != post.createdAt %}
+            {% if post.updated_at and post.updated_at != post.created_at %}
             <div class="meta-item">
-                <strong>Обновлен:</strong> {{ post.updatedAt.strftime('%d.%m.%Y в %H:%M') }}
+                <strong>Обновлен:</strong> {{ post.updated_at }}
             </div>
             {% endif %}
         </div>
@@ -32,7 +32,7 @@
 
     <footer class="post-actions">
         <div class="action-buttons">
-            <a href="/" class="btn">← Назад к списку</a>
+            <a href="/posts" class="btn">← Назад к списку</a>
             <a href="/posts/{{ post.id }}/edit" class="btn">✏️ Редактировать</a>
         </div>
     </footer>
@@ -113,7 +113,7 @@ function deletePost(postId) {
         })
         .then(response => {
             if (response.ok) {
-                window.location.href = '/?message=Пост успешно удален';
+                window.location.href = '/posts?message=Пост успешно удален';
             } else {
                 alert('Ошибка при удалении поста');
             }
