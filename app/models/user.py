@@ -1,42 +1,56 @@
-from datetime import datetime
-from fastapi import FastAPI
-from starlette.responses import JSONResponse
-from typing import Optional
-from flask import app
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class User(BaseModel):
-  id: int
-  email: str
-  login: str
-  password: str
-  createdAt: datetime # Дата и время создания
-  updatedAt: datetime # Дата и время последнего редактирования
+    id: int
+    username: str
+    email: str
+    createdAt: str
+
 
 class UserCreate(BaseModel):
+    username: str = Field(
+        min_length=3,
+        max_length=50,
+        pattern=r"^\S+$",
+        description="Username must be 3-50 characters without spaces",
+    )
     email: str
-    login: str
-    password: str
+    password: str = Field(
+        min_length=6, max_length=100, description="Password must be 6-100 characters"
+    )
 
-    @field_validator('password')
+    @field_validator("password")
     @classmethod
-    def password_length(cls, v: str) -> str:
-        if len(v) < 6:
-            raise ValueError('Password must be at least 6 characters')
+    def password_no_spaces(cls, v: str) -> str:
+        if " " in v:
+            raise ValueError("Password should not contain spaces")
         return v
 
-    @field_validator('login')
-    @classmethod
-    def login_length(cls, v: str) -> str:
-        if len(v) < 3:
-            raise ValueError('Login must be at least 3 characters')
-        return v
 
 class UserUpdate(BaseModel):
-    email: Optional[str] = None
-    login: Optional[str] = None
-    password: Optional[str] = None
+    username: str | None = Field(
+        None,
+        min_length=3,
+        max_length=50,
+        pattern=r"^\S+$",
+        description="Username must be 3-50 characters without spaces",
+    )
+    email: str | None = None
+    password: str | None = Field(
+        None,
+        min_length=6,
+        max_length=100,
+        description="Password must be 6-100 characters",
+    )
+
+    @field_validator("password")
+    @classmethod
+    def password_no_spaces(cls, v: str | None) -> str | None:
+        if v and " " in v:
+            raise ValueError("Password should not contain spaces")
+        return v
+
 
 class UserInDB(User):
     password: str
